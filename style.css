@@ -1,26 +1,57 @@
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-}
-
-#map {
-  width: 100vw;
-  height: 100vh;
-}
-
-/* Popup Card Styling */
-.popup-card {
   font-family: Arial, sans-serif;
+}
+
+/* HEADER */
+.header {
+  background-color: #0b2c4d;
+  color: white;
+  padding: 12px 20px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.header p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+/* MAP */
+#map {
+  height: calc(100vh - 120px);
+  width: 100%;
+}
+
+/* FOOTER */
+.footer {
+  height: 40px;
+  background-color: #f4f4f4;
+  border-top: 1px solid #ddd;
+  padding: 8px 20px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* POPUP */
+.popup-card {
   font-size: 14px;
   line-height: 1.4;
 }
 
-.zone {
-  font-weight: bold;
-}
-
-/* SOS indicators */
+/* SOS */
 .sos-green {
   width: 14px;
   height: 14px;
