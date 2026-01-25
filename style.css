@@ -1,0 +1,45 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#map {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Popup Card Styling */
+.popup-card {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.zone {
+  font-weight: bold;
+}
+
+/* SOS indicators */
+.sos-green {
+  width: 14px;
+  height: 14px;
+  background-color: green;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.sos-red {
+  width: 14px;
+  height: 14px;
+  background-color: red;
+  border-radius: 50%;
+  display: inline-block;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
