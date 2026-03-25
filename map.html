@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chennai Flood Monitoring Dashboard</title>
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-titles">
+        <h1>Chennai Flood Monitoring</h1>
+        <p>Map · Smart drainage • Sensor network • Risk classification</p>
+      </div>
+      <nav class="site-nav" aria-label="Main">
+        <a class="nav-link" href="index.html">Dashboard</a>
+        <a class="nav-link nav-link-active" href="map.html">Map</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAP -->
+  <div id="map"></div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>
+      Zones:
+      <b style="color:green;">Green</b> •
+      <b style="color:goldenrod;">Yellow</b> •
+      <b style="color:orange;">Orange</b> •
+      <b style="color:red;">Red</b>
+    </span>
+    <span>Prototype | ITCH Ideathon</span>
+  </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>

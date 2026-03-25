@@ -2,42 +2,85 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Chennai Flood Monitoring Dashboard</title>
-
-  <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chennai Flood Monitoring — Dashboard</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="page-dashboard">
 
-  <!-- HEADER -->
   <header class="header">
-    <h1>Chennai Flood Monitoring Dashboard</h1>
-    <p>Smart Drainage • Sensor Network • Risk Classification</p>
+    <div class="header-inner">
+      <div class="header-titles">
+        <h1>Chennai Flood Monitoring</h1>
+        <p>Dashboard · ML risk overview (sample data)</p>
+      </div>
+      <nav class="site-nav" aria-label="Main">
+        <a class="nav-link nav-link-active" href="index.html">Dashboard</a>
+        <a class="nav-link" href="map.html">Map</a>
+      </nav>
+    </div>
   </header>
 
-  <!-- MAP -->
-  <div id="map"></div>
+  <main class="dashboard-main">
+    <section class="dash-meta panel">
+      <p>
+        <strong>Last updated:</strong> <span id="dash-generated">—</span>
+      </p>
+      <p>
+        <strong>Model:</strong> <span id="dash-model">—</span>
+        · <span id="dash-source" class="muted"></span>
+      </p>
+    </section>
 
-  <!-- FOOTER -->
+    <section class="stats-row">
+      <div class="stat-card panel">
+        <span class="stat-label">City risk score</span>
+        <span id="stat-risk-score" class="stat-value">—</span>
+      </div>
+      <div class="stat-card panel">
+        <span class="stat-label">Overall status</span>
+        <span id="stat-overall" class="stat-value stat-value-sm">—</span>
+      </div>
+      <div class="stat-card panel">
+        <span class="stat-label">Active SOS</span>
+        <span id="stat-sos" class="stat-value">—</span>
+      </div>
+      <div class="stat-card panel">
+        <span class="stat-label">Sensors online</span>
+        <span id="stat-sensors" class="stat-value">—</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Zones (sensor nodes)</h2>
+      <div id="zone-grid" class="zone-grid"></div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Per-location predictions (preset)</h2>
+      <div class="table-wrap">
+        <table id="predictions-table">
+          <thead>
+            <tr>
+              <th>Location</th>
+              <th>Zone</th>
+              <th>Flood probability</th>
+              <th>Water level (cm)</th>
+              <th>Alert</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
   <footer class="footer">
-    <span>
-      Zones:
-      <b style="color:green;">Green</b> •
-      <b style="color:goldenrod;">Yellow</b> •
-      <b style="color:orange;">Orange</b> •
-      <b style="color:red;">Red</b>
-    </span>
-    <span>Prototype | ITCH Ideathon</span>
+    <span>Chennai coverage · Prototype</span>
+    <span>ITCH Ideathon</span>
   </footer>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="script.js"></script>
-
+  <script src="data.js"></script>
+  <script src="dashboard.js"></script>
 </body>
 </html>
