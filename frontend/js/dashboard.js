@@ -84,18 +84,22 @@ function renderDashboard(data) {
 }
 
 async function loadDashboardData() {
-  // If fetchPredictions exists (api.js loaded), try it. Otherwise use preset.
-  if (typeof window.fetchPredictions === "function") {
-    try {
-      return await window.fetchPredictions();
-    } catch (e) {
-      console.warn("API unavailable, using mockData:", e);
-    }
+  if (typeof window.fetchPredictions !== "function") {
+    throw new Error("API loader missing (frontend/js/api.js not loaded).");
   }
-  return window.ML_SAMPLE_OUTPUT;
+  return await window.fetchPredictions();
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const data = await loadDashboardData();
-  renderDashboard(data);
+  try {
+    const data = await loadDashboardData();
+    renderDashboard(data);
+  } catch (e) {
+    console.error(e);
+    const el = document.getElementById("dash-source");
+    if (el) {
+      el.textContent =
+        "API error: start backend and set OWM_API_KEY (see backend/.env).";
+    }
+  }
 });

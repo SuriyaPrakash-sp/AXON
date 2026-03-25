@@ -1,2 +1,9 @@
-flask>=3.0.0
-flask-cors>=4.0.0
+fastapi
+uvicorn
+xgboost
+scikit-learn
+joblib
+numpy
+pandas
+requests
+python-dotenv

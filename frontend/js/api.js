@@ -24,6 +24,13 @@ function normalizeBase(base) {
   return base.replace(/\/$/, "");
 }
 
+function buildUrl(base, path) {
+  const p = path.startsWith("/") ? path : `/${path}`;
+  if (!base) return p;
+  // Use URL to avoid breaking "http://"
+  return new URL(p, `${normalizeBase(base)}/`).toString();
+}
+
 function mapAlertToZone(alertLevel) {
   // Backend labels are: SAFE, WATCH, WARNING, DANGER
   const s = String(alertLevel).toUpperCase();
@@ -35,16 +42,15 @@ function mapAlertToZone(alertLevel) {
 }
 
 async function tryFetchPredictionsFromFastApi(base) {
-  const b = normalizeBase(base);
-  const nodesUrl = `${b}/api/nodes`.replace(/\/{2,}/g, "/");
-  const statsUrl = `${b}/api/stats`.replace(/\/{2,}/g, "/");
+  const nodesUrl = buildUrl(base, "/api/nodes");
+  const statsUrl = buildUrl(base, "/api/stats");
 
   const [nodesRes, statsRes] = await Promise.all([fetch(nodesUrl), fetch(statsUrl)]);
   if (!nodesRes.ok) throw new Error(`nodes HTTP ${nodesRes.status}`);
   if (!statsRes.ok) throw new Error(`stats HTTP ${statsRes.status}`);
 
   const nodes = await nodesRes.json();
-  const stats = await statsRes.json();
+  await statsRes.json(); // currently unused, but keeps API contract checked
 
   const counts = { Green: 0, Yellow: 0, Orange: 0, Red: 0 };
   let activeSosCount = 0;
