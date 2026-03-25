@@ -1,7 +1,7 @@
 /**
  * Fallback preset — same JSON shape as GET /api/predictions from backend.
  */
-const ML_SAMPLE_OUTPUT = {
+window.ML_SAMPLE_OUTPUT = {
   meta: {
     modelId: "chennai-flood-risk-v0",
     modelVersion: "0.4.2-demo",
