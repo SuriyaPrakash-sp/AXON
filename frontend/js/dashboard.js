@@ -1,14 +1,9 @@
 /**
- * Dashboard UI — loads data via api.js, falls back to mockData.js if the API is unreachable.
+ * Dashboard renderer (preset UI).
+ *
+ * index.html expects the ML_SAMPLE_OUTPUT-like shape:
+ * { meta, city, zoneCounts, predictions }
  */
-
-function loadDashboardData() {
-  return fetchPredictions().catch(() => {
-    const copy = JSON.parse(JSON.stringify(ML_SAMPLE_OUTPUT));
-    copy.meta = { ...copy.meta, source: "preset (API unreachable)" };
-    return copy;
-  });
-}
 
 function formatTime(iso) {
   try {
@@ -18,7 +13,7 @@ function formatTime(iso) {
       timeZone: "Asia/Kolkata"
     });
   } catch {
-    return iso;
+    return String(iso);
   }
 }
 
@@ -32,45 +27,75 @@ function zoneClass(zone) {
 }
 
 function renderDashboard(data) {
-  const { meta, city, zoneCounts, predictions } = data;
+  const { meta, city, zoneCounts, predictions } = data || {};
+  if (!meta || !city || !zoneCounts || !Array.isArray(predictions)) return;
 
-  document.getElementById("dash-generated").textContent = formatTime(meta.generatedAt);
-  document.getElementById("dash-model").textContent = `${meta.modelId} · ${meta.modelVersion}`;
-  document.getElementById("dash-source").textContent = String(meta.source);
+  const dashGenerated = document.getElementById("dash-generated");
+  const dashModel = document.getElementById("dash-model");
+  const dashSource = document.getElementById("dash-source");
 
-  document.getElementById("stat-risk-score").textContent = String(city.riskScore);
-  document.getElementById("stat-overall").textContent = city.overallRisk;
-  document.getElementById("stat-sos").textContent = String(city.activeSosCount);
-  document.getElementById("stat-sensors").textContent = `${city.sensorsOnline}/${city.sensorsTotal}`;
+  const statRiskScore = document.getElementById("stat-risk-score");
+  const statOverall = document.getElementById("stat-overall");
+  const statSos = document.getElementById("stat-sos");
+  const statSensors = document.getElementById("stat-sensors");
+
+  if (dashGenerated) dashGenerated.textContent = formatTime(meta.generatedAt);
+  if (dashModel) dashModel.textContent = `${meta.modelId} · ${meta.modelVersion}`;
+  if (dashSource) {
+    dashSource.textContent =
+      meta.source === "preset" ? "Sample preset (swap for API)" : String(meta.source);
+  }
+
+  if (statRiskScore) statRiskScore.textContent = String(city.riskScore);
+  if (statOverall) statOverall.textContent = city.overallRisk;
+  if (statSos) statSos.textContent = String(city.activeSosCount);
+  if (statSensors) statSensors.textContent = `${city.sensorsOnline}/${city.sensorsTotal}`;
 
   const zoneGrid = document.getElementById("zone-grid");
-  zoneGrid.innerHTML = "";
-  ["Green", "Yellow", "Orange", "Red"].forEach((name) => {
-    const n = zoneCounts[name] ?? 0;
-    const el = document.createElement("div");
-    el.className = "zone-card";
-    el.innerHTML = `<span class="${zoneClass(name)}">${name}</span><strong>${n}</strong><span class="zone-card-label">nodes</span>`;
-    zoneGrid.appendChild(el);
-  });
+  if (zoneGrid) {
+    zoneGrid.innerHTML = "";
+    ["Green", "Yellow", "Orange", "Red"].forEach((name) => {
+      const n = zoneCounts[name] ?? 0;
+      const el = document.createElement("div");
+      el.className = "zone-card";
+      el.innerHTML = `<span class="${zoneClass(name)}">${name}</span><strong>${n}</strong><span class="zone-card-label">nodes</span>`;
+      zoneGrid.appendChild(el);
+    });
+  }
 
   const tbody = document.querySelector("#predictions-table tbody");
-  tbody.innerHTML = "";
-  predictions
-    .slice()
-    .sort((a, b) => b.floodProbability - a.floodProbability)
-    .forEach((row) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${row.location}</td>
-        <td><span class="${zoneClass(row.zone)}">${row.zone}</span></td>
-        <td>${(row.floodProbability * 100).toFixed(1)}%</td>
-        <td>${row.waterLevelCm}</td>
-        <td>${row.sos ? '<span class="sos-flag">SOS</span>' : "—"}</td>
-      `;
-      tbody.appendChild(tr);
-    });
+  if (tbody) {
+    tbody.innerHTML = "";
+    predictions
+      .slice()
+      .sort((a, b) => (b.floodProbability || 0) - (a.floodProbability || 0))
+      .forEach((row) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.location}</td>
+          <td><span class="${zoneClass(row.zone)}">${row.zone}</span></td>
+          <td>${((row.floodProbability || 0) * 100).toFixed(1)}%</td>
+          <td>${row.waterLevelCm}</td>
+          <td>${row.sos ? '<span class="sos-flag">SOS</span>' : "—"}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+  }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadDashboardData().then(renderDashboard);
+async function loadDashboardData() {
+  // If fetchPredictions exists (api.js loaded), try it. Otherwise use preset.
+  if (typeof window.fetchPredictions === "function") {
+    try {
+      return await window.fetchPredictions();
+    } catch (e) {
+      console.warn("API unavailable, using mockData:", e);
+    }
+  }
+  return window.ML_SAMPLE_OUTPUT;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const data = await loadDashboardData();
+  renderDashboard(data);
 });
