@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="api-base" content="http://127.0.0.1:5000">
   <title>Chennai Flood Monitoring — Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="page-dashboard">
 
@@ -12,7 +13,7 @@
     <div class="header-inner">
       <div class="header-titles">
         <h1>Chennai Flood Monitoring</h1>
-        <p>Dashboard · ML risk overview (sample data)</p>
+        <p>Dashboard · ML risk overview</p>
       </div>
       <nav class="site-nav" aria-label="Main">
         <a class="nav-link nav-link-active" href="index.html">Dashboard</a>
@@ -57,7 +58,7 @@
     </section>
 
     <section class="panel">
-      <h2 class="section-title">Per-location predictions (preset)</h2>
+      <h2 class="section-title">Per-location predictions</h2>
       <div class="table-wrap">
         <table id="predictions-table">
           <thead>
@@ -80,7 +81,8 @@
     <span>ITCH Ideathon</span>
   </footer>
 
-  <script src="data.js"></script>
-  <script src="dashboard.js"></script>
+  <script src="js/mockData.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
 </body>
 </html>

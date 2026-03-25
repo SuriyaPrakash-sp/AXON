@@ -1,6 +1,5 @@
 /**
- * Sample preset data — same shape we expect from the ML service later.
- * Replace the static object with fetch() to your model endpoint when ready.
+ * Fallback preset — same JSON shape as GET /api/predictions from backend.
  */
 const ML_SAMPLE_OUTPUT = {
   meta: {

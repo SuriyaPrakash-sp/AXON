@@ -1,10 +1,13 @@
 /**
- * Dashboard UI driven by ML_SAMPLE_OUTPUT in data.js.
- * Later: replace loadDashboardData() body with fetch(url).then(r => r.json()).
+ * Dashboard UI — loads data via api.js, falls back to mockData.js if the API is unreachable.
  */
 
 function loadDashboardData() {
-  return Promise.resolve(ML_SAMPLE_OUTPUT);
+  return fetchPredictions().catch(() => {
+    const copy = JSON.parse(JSON.stringify(ML_SAMPLE_OUTPUT));
+    copy.meta = { ...copy.meta, source: "preset (API unreachable)" };
+    return copy;
+  });
 }
 
 function formatTime(iso) {
@@ -33,8 +36,7 @@ function renderDashboard(data) {
 
   document.getElementById("dash-generated").textContent = formatTime(meta.generatedAt);
   document.getElementById("dash-model").textContent = `${meta.modelId} · ${meta.modelVersion}`;
-  document.getElementById("dash-source").textContent =
-    meta.source === "preset" ? "Sample preset (swap for API)" : meta.source;
+  document.getElementById("dash-source").textContent = String(meta.source);
 
   document.getElementById("stat-risk-score").textContent = String(city.riskScore);
   document.getElementById("stat-overall").textContent = city.overallRisk;
